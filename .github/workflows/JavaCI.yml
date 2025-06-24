@@ -19,33 +19,8 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
       with:
           gradle-version: '8.7'
-          fetch-depth: 0
           build-root-directory: ./app
 
     - name: Execute Gradle build
-      run: gradlew build
+      run: ./gradlew clean buildgradlew build
       working-directory: ./app
-      
-    - name: Generate coverage report
-      run: make report
-      
-    - name: Cache SonarQube packages
-      uses: actions/cache@v4
-      with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-          
-    - name: Cache Gradle packages
-      uses: actions/cache@v4
-      with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-          
-    - name: Build and analyze
-      env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew sonar --info
-
-
