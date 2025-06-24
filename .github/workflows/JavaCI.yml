@@ -22,6 +22,5 @@ jobs:
           build-root-directory: ./app
 
     - name: Execute Gradle build
-      run: make build
-      working-directory: ./app
+      run: ./gradlew build
       
