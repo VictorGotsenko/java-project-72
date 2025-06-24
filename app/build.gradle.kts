@@ -36,7 +36,7 @@ checkstyle {
 }
 
 jacoco {
-    toolVersion = "0.8.14"
+    toolVersion = "0.8.12"
 }
 
 tasks.jacocoTestReport {
