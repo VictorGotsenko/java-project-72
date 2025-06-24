@@ -1,8 +1,8 @@
 plugins {
     id("java")
     id("application")
-    checkstyle
-    jacoco
+    id("checkstyle")
+    id("jacoco")
     id("se.patrikerdes.use-latest-versions") version "0.2.18"
     id("com.github.ben-manes.versions") version "0.51.0"
 
@@ -50,9 +50,11 @@ tasks.test {
 }
 
 sonar {
-  properties {
-    property("sonar.projectKey", "VictorGotsenko_java-project-72")
-    property("sonar.organization", "victorgotsenko")
-    property("sonar.host.url", "https://sonarcloud.io")
+    properties {
+        property("sonar.coverage.jacoco.xmlReportPaths",
+            "${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.projectKey", "VictorGotsenko_java-project-72")
+        property("sonar.organization", "victorgotsenko")
+        property("sonar.host.url", "https://sonarcloud.io")
   }
 }
