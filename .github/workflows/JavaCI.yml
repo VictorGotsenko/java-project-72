@@ -18,8 +18,8 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
-          gradle-version: '8.7'
-          build-root-directory: ./app
+        gradle-version: '8.7'
+        build-root-directory: ./app
     
     - name: Execute Gradle build
       run: ./gradlew build
@@ -28,4 +28,11 @@ jobs:
     - name: Generate coverage report
       run: ./gradlew jacocoTestReport
       working-directory: ./app
+
+    - name: Cache SonarQube packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
       
