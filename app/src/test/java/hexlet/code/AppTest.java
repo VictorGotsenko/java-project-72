@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AppTest {
     @Test
-    void MainTest() {
+    void mainTest() {
         assertEquals(true, true);
     }
 }
