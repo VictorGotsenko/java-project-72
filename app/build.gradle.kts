@@ -3,14 +3,14 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     id("java")
-    id("application")
-    id("checkstyle")
-    id("jacoco")
+    application
+    checkstyle
+    jacoco
 
     id("com.github.johnrengelman.shadow") version "8.1.1"
 
     id("se.patrikerdes.use-latest-versions") version "0.2.18"
-    id("com.github.ben-manes.versions") version "0.51.0"
+    id("com.github.ben-manes.versions") version "0.52.0"
 
     id("org.sonarqube") version "6.2.0.5505"
 }
@@ -28,11 +28,10 @@ repositories {
 
 dependencies {
     // Javalin
-    implementation("io.javalin:javalin:6.5.0")
-    implementation("io.javalin:javalin-rendering:6.5.0")
-    implementation("org.slf4j:slf4j-simple:2.0.16")
-    implementation("gg.jte:jte:3.1.16")
-
+    implementation("io.javalin:javalin:6.7.0")
+    implementation("io.javalin:javalin-rendering:6.7.0")
+    implementation("org.slf4j:slf4j-simple:2.1.0-alpha1")
+    implementation("gg.jte:jte:3.2.1")
 
     // LOMBOK
     compileOnly("org.projectlombok:lombok:1.18.38")
@@ -41,17 +40,23 @@ dependencies {
 	testCompileOnly("org.projectlombok:lombok:1.18.38")
 	testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 
-
-
     // CheckStyle
-    implementation("com.puppycrawl.tools:checkstyle:10.23.1")
+    implementation("com.puppycrawl.tools:checkstyle:10.26.0")
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    // database H2 & HikariCP
+    implementation("com.h2database:h2:2.3.232")
+    implementation("com.zaxxer:HikariCP:6.3.0")
+
+    // Tests
+    testImplementation("org.junit.jupiter:junit-jupiter:5.13.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.2")
+
+    //testImplementation(platform("org.junit:junit-bom:5.13.2"))
+    //testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 checkstyle {
-    toolVersion = "10.23.1"
+    toolVersion = "10.26.0"
     configFile = file("config/checkstyle/checkstyle.xml")
 }
 
