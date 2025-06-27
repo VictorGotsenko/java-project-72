@@ -1,7 +1,17 @@
 package hexlet.code;
 
-import hexlet.code.repository.BaseRepository;
-// import io.hexlet.component.DataInitializer;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.stream.Collectors;
+
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
+import gg.jte.resolve.ResourceCodeResolver;
 
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
@@ -11,17 +21,18 @@ import lombok.extern.slf4j.Slf4j;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.util.stream.Collectors;
+import hexlet.code.repository.BaseRepository;
 
 
 @Slf4j
 public class App {
 
+    private static TemplateEngine createTemplateEngine() {
+        ClassLoader classLoader = App.class.getClassLoader();
+        ResourceCodeResolver codeResolver = new ResourceCodeResolver("templates", classLoader);
+        TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
+        return templateEngine;
+    }
 
     private static String getDatabaseUrl() {
         // Получаю url базы данных из переменной окружения DATABASE_URL
@@ -42,24 +53,28 @@ public class App {
         hikariConfig.setJdbcUrl(getDatabaseUrl());
 
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-        var sql = readResourceFile("schema.sql");
+        String sql = readResourceFile("schema.sql");
 
         log.info(sql);
-        try (var connection = dataSource.getConnection();
-             var statement = connection.createStatement()) {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
             statement.execute(sql);
         }
         BaseRepository.dataSource = dataSource;
 
 
-        var app = Javalin.create(config -> {
+        Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
-            config.fileRenderer(new JavalinJte());
+            config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
 
+        // root path
         app.get("/", ctx -> {
-            ctx.result("Hello World");
+//            ctx.result("Hello World");
+            ctx.render("index_s.jte");
+
         });
+
         return app;
     }
 

@@ -30,8 +30,11 @@ dependencies {
     // Javalin
     implementation("io.javalin:javalin:6.7.0")
     implementation("io.javalin:javalin-rendering:6.7.0")
-    implementation("org.slf4j:slf4j-simple:2.1.0-alpha1")
     implementation("gg.jte:jte:3.2.1")
+
+    implementation("org.slf4j:slf4j-simple:2.1.0-alpha1")
+
+
 
     // LOMBOK
     compileOnly("org.projectlombok:lombok:1.18.38")
