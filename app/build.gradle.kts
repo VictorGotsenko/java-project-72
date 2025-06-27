@@ -50,6 +50,9 @@ dependencies {
     implementation("com.h2database:h2:2.3.232")
     implementation("com.zaxxer:HikariCP:6.3.0")
 
+    // Special for PostgreSQL
+    implementation("org.postgresql:postgresql:42.7.7")
+
     // Tests
     testImplementation("org.junit.jupiter:junit-jupiter:5.13.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.2")
