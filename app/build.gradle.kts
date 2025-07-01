@@ -19,7 +19,7 @@ group = "hexlet.code"
 version = "1.0-SNAPSHOT"
 
 application {
-        mainClass = "hexlet.code.App"
+    mainClass = "hexlet.code.App"
 }
 
 repositories {
@@ -35,13 +35,12 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.1.0-alpha1")
 
 
-
     // LOMBOK
     compileOnly("org.projectlombok:lombok:1.18.38")
-	annotationProcessor("org.projectlombok:lombok:1.18.38")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
 
-	testCompileOnly("org.projectlombok:lombok:1.18.38")
-	testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
+    testCompileOnly("org.projectlombok:lombok:1.18.38")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 
     // CheckStyle
     implementation("com.puppycrawl.tools:checkstyle:10.26.0")
@@ -70,6 +69,13 @@ jacoco {
     toolVersion = "0.8.12"
 }
 
+
+// Solution for warning "Recompile with -Xlint:unchecked for details"
+tasks.withType<JavaCompile> {
+    options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation")) // Add other desired flags
+}
+
+
 tasks.jacocoTestReport {
     reports {
         xml.required = true
@@ -85,5 +91,5 @@ sonar {
         property("sonar.projectKey", "VictorGotsenko_java-project-72")
         property("sonar.organization", "victorgotsenko")
         property("sonar.host.url", "https://sonarcloud.io")
-  }
+    }
 }

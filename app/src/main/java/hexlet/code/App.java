@@ -1,7 +1,12 @@
 package hexlet.code;
 
+import hexlet.code.repository.BaseRepository;
+import hexlet.code.controller.UrlController;
+import hexlet.code.util.NamedRoutes;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -21,17 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import hexlet.code.repository.BaseRepository;
-
-
 @Slf4j
 public class App {
-
     private static TemplateEngine createTemplateEngine() {
         ClassLoader classLoader = App.class.getClassLoader();
         ResourceCodeResolver codeResolver = new ResourceCodeResolver("templates", classLoader);
-        TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
-        return templateEngine;
+        return TemplateEngine.create(codeResolver, ContentType.Html);
     }
 
     private static String getDatabaseUrl() {
@@ -40,9 +40,8 @@ public class App {
         return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
     }
 
-
     private static String readResourceFile(String fileName) throws IOException {
-        var inputStream = App.class.getClassLoader().getResourceAsStream(fileName);
+        InputStream inputStream = App.class.getClassLoader().getResourceAsStream(fileName);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             return reader.lines().collect(Collectors.joining("\n"));
         }
@@ -62,22 +61,21 @@ public class App {
         }
         BaseRepository.dataSource = dataSource;
 
-
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
 
         // root path
-        app.get("/", ctx -> {
-//            ctx.result("Hello World");
-            ctx.render("index_s.jte");
-
-        });
+        app.get(NamedRoutes.mainPage(), ctx -> ctx.render("index.jte"));
+        // other
+        app.post(NamedRoutes.urlsPath(), UrlController::create);
+        app.get(NamedRoutes.buildPath(), UrlController::build);
+        app.get(NamedRoutes.urlsPath(), UrlController::index);
+        app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
 
         return app;
     }
-
 
     public static void main(String[] args) throws IOException, SQLException { //throws SQLException
         Javalin app = getApp();
