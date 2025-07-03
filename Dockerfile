@@ -1,9 +1,13 @@
-FROM gradle:8.5-jdk21
+FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
 COPY /app .
 
-RUN ["./gradlew", "clean", "build"]
+RUN ./gradlew --no-daemon clean build
 
-CMD ["./gradlew", "run"]
+ENV JAVA_OPTS="-Xmx512M -Xms512M"
+
+EXPOSE 7070
+
+CMD ["java", "-jar", "build/libs/HexletJavalin-1.0-SNAPSHOT-all.jar"]
