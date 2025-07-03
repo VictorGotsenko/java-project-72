@@ -37,7 +37,22 @@ public class App {
     private static String getDatabaseUrl() {
         // Получаю url базы данных из переменной окружения DATABASE_URL
         // Если она не установлена, используем базу в памяти
-        return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
+        // • Use the JDBC URL: jdbc:pgsql://<server>[:<port>]/<database>
+//        String jdbcUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
+//        String jdbcUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project");
+
+//        Формат записи URL у базы данных должен быть таким:
+//        jdbc:postgresql://<Hostname>:<Port>/<Database>?password=<Password>&user=<Username>
+        String jdbcUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL",
+                "jdbc:postgresql://localhost:5432/project72?password=123z&user=prjct72_user");
+
+        log.info(jdbcUrl);
+        return jdbcUrl;
+    }
+
+    private static int getPort() {
+        String port = System.getenv().getOrDefault("PORT", "7070");
+        return Integer.valueOf(port);
     }
 
     private static String readResourceFile(String fileName) throws IOException {
@@ -79,6 +94,7 @@ public class App {
 
     public static void main(String[] args) throws IOException, SQLException { //throws SQLException
         Javalin app = getApp();
-        app.start(7070);
+//        app.start(7070);
+        app.start(getPort());
     }
 }
