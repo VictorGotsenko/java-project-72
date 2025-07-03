@@ -45,12 +45,12 @@ dependencies {
     // CheckStyle
     implementation("com.puppycrawl.tools:checkstyle:10.26.0")
 
+    // Special for PostgreSQL
+    implementation("org.postgresql:postgresql:42.7.7")
+
     // database H2 & HikariCP
     implementation("com.h2database:h2:2.3.232")
     implementation("com.zaxxer:HikariCP:6.3.0")
-
-    // Special for PostgreSQL
-    implementation("org.postgresql:postgresql:42.7.7")
 
     // Tests
     testImplementation("org.junit.jupiter:junit-jupiter:5.13.2")
