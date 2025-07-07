@@ -88,4 +88,14 @@ public class UrlRepository extends BaseRepository {
             return result;
         }
     }
+
+    public static void clear() {
+        String sql = "DELETE FROM urls;";
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.executeUpdate();
+        }   catch (SQLException e) {
+            throw new RuntimeException("Failed to clear the Url database", e);
+        }
+    }
 }
