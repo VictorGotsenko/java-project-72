@@ -18,14 +18,14 @@ class AppTest {
     Javalin app;
 
     @BeforeEach
-    public final void setUp() throws SQLException, IOException {
+    final void setUp() throws SQLException, IOException {
         app = App.getApp();
         // Очистка базы данных перед каждым тестом
         UrlRepository.clear();
     }
 
     @Test
-    public void testMainPage() {
+    void testMainPage() {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/");
             assertThat(response.code()).isEqualTo(200);
@@ -35,7 +35,7 @@ class AppTest {
 
     //save URL in BD
     @Test
-    public void testUrlSave() throws SQLException {
+    void testUrlSave() throws SQLException {
         var url = new Url("https://mail.ru/", LocalDateTime.now());
         UrlRepository.save(url);
         JavalinTest.test(app, (server, client) -> {
@@ -45,11 +45,10 @@ class AppTest {
     }
 
     @Test
-    public void testCreateUrl() {
+    void testCreateUrl() {
         JavalinTest.test(app, (server, client) -> {
             String requestedBody = "url=https://ya.ru/";
             var response = client.post("/urls", requestedBody);
-//            var response = client.post(NamedRoutes.urlsPath(), requestBody);
             var url = UrlRepository.findByName("https://ya.ru");
             assertThat(url.get().getName()).isEqualTo("https://ya.ru");
             assertThat(response.code()).isEqualTo(200);
@@ -58,7 +57,7 @@ class AppTest {
     }
 
     @Test
-    public void testAllUrls() {
+    void testAllUrls() {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/urls");
             assertThat(response.code()).isEqualTo(200);

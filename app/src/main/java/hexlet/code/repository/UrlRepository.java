@@ -95,7 +95,8 @@ public class UrlRepository extends BaseRepository {
             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.executeUpdate();
         }   catch (SQLException e) {
-            throw new RuntimeException("Failed to clear the Url database", e);
+//            throw new RuntimeException("Failed to clear the Url database", e);
+            System.out.println("Failed to clear the Url database" + e);
         }
     }
 }
