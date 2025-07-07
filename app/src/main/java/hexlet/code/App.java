@@ -38,13 +38,13 @@ public class App {
         // Получаю url базы данных из переменной окружения DATABASE_URL
         // Если она не установлена, используем базу в памяти
         // • Use the JDBC URL: jdbc:pgsql://<server>[:<port>]/<database>
-//        String jdbcUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
+        String jdbcUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
 //        String jdbcUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project");
 
 //        Формат записи URL у базы данных должен быть таким:
 //        jdbc:postgresql://<Hostname>:<Port>/<Database>?password=<Password>&user=<Username>
-        String jdbcUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL",
-                "jdbc:postgresql://localhost:5432/project72?password=123z&user=prjct72_user");
+//        String jdbcUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL",
+//                "jdbc:postgresql://localhost:5432/project72?password=123z&user=prjct72_user");
 
         log.info(jdbcUrl);
         return jdbcUrl;

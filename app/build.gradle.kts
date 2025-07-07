@@ -6,12 +6,9 @@ plugins {
     application
     checkstyle
     jacoco
-
     id("com.github.johnrengelman.shadow") version "8.1.1"
-
     id("se.patrikerdes.use-latest-versions") version "0.2.18"
     id("com.github.ben-manes.versions") version "0.52.0"
-
     id("org.sonarqube") version "6.2.0.5505"
 }
 
@@ -31,50 +28,38 @@ dependencies {
     implementation("io.javalin:javalin:6.7.0")
     implementation("io.javalin:javalin-rendering:6.7.0")
     implementation("gg.jte:jte:3.2.1")
-
     implementation("org.slf4j:slf4j-simple:2.1.0-alpha1")
-
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.19.1")
 
     // LOMBOK
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
-
     testCompileOnly("org.projectlombok:lombok:1.18.38")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
-
     // CheckStyle
-    implementation("com.puppycrawl.tools:checkstyle:10.26.0")
-
+    implementation("com.puppycrawl.tools:checkstyle:10.26.1")
     // Special for PostgreSQL
     implementation("org.postgresql:postgresql:42.7.7")
-
     // database H2 & HikariCP
     implementation("com.h2database:h2:2.3.232")
     implementation("com.zaxxer:HikariCP:6.3.0")
 
     // Tests
-    testImplementation("org.junit.jupiter:junit-jupiter:5.13.2")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.2")
-
-    //testImplementation(platform("org.junit:junit-bom:5.13.2"))
-    //testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.0-M1")
+    testImplementation(platform("org.junit:junit-bom:6.0.0-M1"))
+    testImplementation("io.javalin:javalin-testtools:6.7.0")
+    testImplementation("org.assertj:assertj-core:4.0.0-M1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.0-M1")
 }
 
 checkstyle {
-    toolVersion = "10.26.0"
+    toolVersion = "10.26.1"
     configFile = file("config/checkstyle/checkstyle.xml")
 }
 
 jacoco {
     toolVersion = "0.8.12"
 }
-
-
-// Solution for warning "Recompile with -Xlint:unchecked for details"
-tasks.withType<JavaCompile> {
-    options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation")) // Add other desired flags
-}
-
 
 tasks.jacocoTestReport {
     reports {
@@ -84,6 +69,14 @@ tasks.jacocoTestReport {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
+        // showStackTraces = true
+        // showCauses = true
+        showStandardStreams = true
+    }
+
 }
 
 sonar {
