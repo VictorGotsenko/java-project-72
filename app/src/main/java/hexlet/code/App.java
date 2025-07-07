@@ -84,7 +84,6 @@ public class App {
 
     public static void main(String[] args) throws IOException, SQLException { //throws SQLException
         Javalin app = getApp();
-//        app.start(7070);
         app.start(getPort());
     }
 }
