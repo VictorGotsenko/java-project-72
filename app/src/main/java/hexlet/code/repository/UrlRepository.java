@@ -16,10 +16,12 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class UrlRepository extends BaseRepository {
+public final class UrlRepository extends BaseRepository {
+    public static final String FIELD_CREATED_AT = "created_at";
+
     public static void save(Url url) throws SQLException {
         String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = BaseRepository.getDataSource().getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
             LocalDateTime createdAt = LocalDateTime.now();
@@ -36,14 +38,14 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static Optional<Url> find(Long id) throws SQLException {
-        String sql = "SELECT * FROM urls WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();
+        String sql = "SELECT id, name, created_at FROM urls WHERE id = ?";
+        try (Connection conn = BaseRepository.getDataSource().getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 String name = resultSet.getString("name");
-                LocalDateTime createAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+                LocalDateTime createAt = resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime();
                 Url url = new Url(name, createAt);
                 url.setCreatedAt(createAt);
                 url.setId(id);
@@ -54,13 +56,13 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static Optional<Url> findByName(String name) throws SQLException {
-        String sql = "SELECT * FROM urls WHERE name = ?";
-        try (Connection connection = dataSource.getConnection();
+        String sql = "SELECT id, name, created_at FROM urls WHERE name = ?";
+        try (Connection connection = BaseRepository.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+                LocalDateTime createdAt = resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime();
                 Long id = resultSet.getLong("id");
                 Url url = new Url(name, createdAt);
                 url.setId(id);
@@ -71,16 +73,16 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static List<Url> getEntities() throws SQLException {
-        String sql = "SELECT * FROM urls";
-        try (Connection conn = dataSource.getConnection();
+        //  String sql = "SELECT * FROM urls" - Sonar warning
+        String sql = "SELECT id, name, created_at FROM urls";
+        try (Connection conn = BaseRepository.getDataSource().getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Url> result = new ArrayList<Url>();
+            List<Url> result = new ArrayList<>();
             while (resultSet.next()) {
                 Long id = resultSet.getLong("id");
                 String name = resultSet.getString("name");
-                LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-
+                LocalDateTime createdAt = resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime();
                 Url url = new Url(name, createdAt);
                 url.setId(id);
                 result.add(url);
@@ -91,12 +93,12 @@ public class UrlRepository extends BaseRepository {
 
     public static void clear() {
         String sql = "DELETE FROM urls;";
-        try (Connection conn = dataSource.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        try (Connection conn = BaseRepository.getDataSource().getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.executeUpdate();
-        }   catch (SQLException e) {
-//            throw new RuntimeException("Failed to clear the Url database", e);
-            System.out.println("Failed to clear the Url database" + e);
+        } catch (SQLException e) {
+            //    throw new RuntimeException("Failed to clear the Url database", e)
+            log.info("Failed to clear the Url database", e);  // Compliant, output via logger
         }
     }
 }

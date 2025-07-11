@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.controller.UrlCheckController;
 import hexlet.code.repository.BaseRepository;
 import hexlet.code.controller.UrlController;
 import hexlet.code.util.NamedRoutes;
@@ -64,7 +65,7 @@ public class App {
              Statement statement = connection.createStatement()) {
             statement.execute(sql);
         }
-        BaseRepository.dataSource = dataSource;
+        BaseRepository.setDataSource(dataSource);
 
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
@@ -78,6 +79,8 @@ public class App {
         app.get(NamedRoutes.buildPath(), UrlController::build);
         app.get(NamedRoutes.urlsPath(), UrlController::index);
         app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
+        // checks
+        app.post(NamedRoutes.urlPathForChecks("{id}"), UrlCheckController::check);
 
         return app;
     }

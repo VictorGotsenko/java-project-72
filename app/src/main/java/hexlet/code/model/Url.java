@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,9 +15,11 @@ public class Url {
     private Long id;
     private String name;
     private LocalDateTime createdAt;
+    private List<UrlCheck> urlCheckList;
 
     public Url(String name, LocalDateTime createdAt) {
         this.name = name;
         this.createdAt = createdAt;
+        this.urlCheckList = new ArrayList<>();
     }
 }
