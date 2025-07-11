@@ -1,0 +1,61 @@
+package hexlet.code.controller;
+
+import hexlet.code.model.Url;
+import hexlet.code.model.UrlCheck;
+import hexlet.code.repository.UrlCheckRepository;
+import hexlet.code.repository.UrlRepository;
+import hexlet.code.util.NamedRoutes;
+
+import static hexlet.code.util.AppSettings.FLASH_TYPE;
+import static hexlet.code.util.AppSettings.FLASH_DANGER;
+import static hexlet.code.util.AppSettings.FLASH_SUCCESS;
+
+import static hexlet.code.util.AppSettings.FLASH;
+import static hexlet.code.util.AppSettings.CHECK_ERROR;
+import static hexlet.code.util.AppSettings.PAGE_OK;
+import static hexlet.code.util.AppSettings.URL_BAD;
+
+import io.javalin.http.Context;
+import io.javalin.http.NotFoundResponse;
+
+import java.sql.SQLException;
+
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public final class UrlCheckController {
+    private UrlCheckController() {
+        // Prevent instantiation - Sonar Warning
+    }
+
+    public static void check(Context ctx) throws SQLException {
+        Long urlId = ctx.pathParamAsClass("id", Long.class).get();
+        Url url = UrlRepository.find(urlId)
+                .orElseThrow(() -> new NotFoundResponse("Entity with id = " + urlId + " not found"));
+        log.info("Получен ID: {}", urlId);
+        try {
+            HttpResponse<String> response = Unirest.get(url.getName()).asString();
+            int statusCode = response.getStatus();
+
+            UrlCheck urlCheck = new UrlCheck(urlId, statusCode, "title", "h1", "descrip");
+            UrlCheckRepository.save(urlCheck);
+
+            log.info("check saved");
+        } catch (UnirestException e) {
+            ctx.sessionAttribute(FLASH, URL_BAD);
+            ctx.sessionAttribute(FLASH_TYPE, FLASH_DANGER);
+            ctx.redirect(NamedRoutes.urlPath(urlId));
+
+        } catch (Exception e) {
+            ctx.sessionAttribute(FLASH, CHECK_ERROR + e.getMessage());
+            ctx.sessionAttribute(FLASH_TYPE, FLASH_DANGER);
+            ctx.redirect(NamedRoutes.urlPath(urlId));
+        }
+        ctx.sessionAttribute(FLASH, PAGE_OK);
+        ctx.sessionAttribute(FLASH_TYPE, FLASH_SUCCESS);
+        ctx.redirect(NamedRoutes.urlPath(urlId));
+    }
+}

@@ -44,12 +44,19 @@ dependencies {
     implementation("com.h2database:h2:2.3.232")
     implementation("com.zaxxer:HikariCP:6.3.0")
 
+    // Unirest Java
+    implementation("com.konghq:unirest-java:3.14.5")
+
     // Tests
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.0-M1")
     testImplementation(platform("org.junit:junit-bom:6.0.0-M1"))
     testImplementation("io.javalin:javalin-testtools:6.7.0")
     testImplementation("org.assertj:assertj-core:4.0.0-M1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.0-M1")
+
+    // MockWebServer » 5.1.0
+//    testImplementation("com.squareup.okhttp3:mockwebserver:5.1.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }
 
 checkstyle {
