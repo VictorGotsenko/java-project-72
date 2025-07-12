@@ -62,5 +62,13 @@
 
     ${content}
 </main>
+<footer class="footer">
+    <div class="container">
+        <div class="text-center text-muted">
+            created by
+            <a href="https://github.com/VictorGotsenko" target="_blank">Victor Gotsenko</a>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

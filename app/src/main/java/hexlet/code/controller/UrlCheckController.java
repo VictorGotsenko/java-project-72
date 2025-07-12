@@ -24,6 +24,8 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 @Slf4j
 public final class UrlCheckController {
@@ -35,12 +37,18 @@ public final class UrlCheckController {
         Long urlId = ctx.pathParamAsClass("id", Long.class).get();
         Url url = UrlRepository.find(urlId)
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + urlId + " not found"));
-        log.info("Получен ID: {}", urlId);
+        log.info("Got URL ID: {}", urlId);
         try {
             HttpResponse<String> response = Unirest.get(url.getName()).asString();
-            int statusCode = response.getStatus();
+            Document document = Jsoup.parse(response.getBody());
 
-            UrlCheck urlCheck = new UrlCheck(urlId, statusCode, "title", "h1", "descrip");
+            int statusCode = response.getStatus();
+            log.info("Response getStatus: {}", statusCode);
+            String title = document.title();
+            String h1 = document.select("h1").text();
+            String description = document.select("meta[name=description]").attr("content");
+
+            UrlCheck urlCheck = new UrlCheck(urlId, statusCode, title, h1, description);
             UrlCheckRepository.save(urlCheck);
 
             log.info("check saved");

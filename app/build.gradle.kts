@@ -47,6 +47,9 @@ dependencies {
     // Unirest Java
     implementation("com.konghq:unirest-java:3.14.5")
 
+    // jsoup HTML parser library @ https://jsoup.org/
+    implementation("org.jsoup:jsoup:1.21.1")
+
     // Tests
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.0-M1")
     testImplementation(platform("org.junit:junit-bom:6.0.0-M1"))

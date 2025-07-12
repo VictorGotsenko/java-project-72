@@ -1,6 +1,7 @@
 package hexlet.code.repository;
 
 import hexlet.code.model.UrlCheck;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+@Slf4j
 public final class UrlCheckRepository {
     private UrlCheckRepository() {
         // for Sonar Warning
@@ -41,6 +42,7 @@ public final class UrlCheckRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            log.info("Error in UrlCheckRepository.save ", e);
         }
     }
 
@@ -67,6 +69,7 @@ public final class UrlCheckRepository {
                 result.add(urlCheck);
             }
         } catch (SQLException e) {
+            log.info("Error in UrlCheckRepository.findById ", e);
             e.printStackTrace();
         }
         return result;
@@ -92,6 +95,7 @@ public final class UrlCheckRepository {
                 result.put(urlId, urlCheck);
             }
         } catch (SQLException e) {
+            log.info("Error in UrlCheckRepository.getLastestChecks ", e);
             e.printStackTrace();
         }
         return result;
