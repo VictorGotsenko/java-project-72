@@ -19,19 +19,19 @@ import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 @Slf4j
+@UtilityClass  // for Sonar warning
 public final class UrlCheckController {
-    private UrlCheckController() {
-        // Prevent instantiation - Sonar Warning
-    }
 
     public static void check(Context ctx) throws SQLException {
         Long urlId = ctx.pathParamAsClass("id", Long.class).get();
@@ -47,10 +47,11 @@ public final class UrlCheckController {
             String title = document.title();
             String h1 = document.select("h1").text();
             String description = document.select("meta[name=description]").attr("content");
+            LocalDateTime createdAt = LocalDateTime.now();
 
-            UrlCheck urlCheck = new UrlCheck(urlId, statusCode, title, h1, description);
+            UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, urlId, createdAt);
+            log.info("urlCheck created");
             UrlCheckRepository.save(urlCheck);
-
             log.info("check saved");
         } catch (UnirestException e) {
             ctx.sessionAttribute(FLASH, URL_BAD);

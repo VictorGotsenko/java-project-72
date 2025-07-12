@@ -1,18 +1,15 @@
 package hexlet.code.util;
 
-public final class AppSettings {
-    private AppSettings() {
-        //for SONAR warning
-        throw new IllegalStateException("Utility class");
-    }
+import lombok.experimental.UtilityClass;
 
+@UtilityClass  // for Sonar warning
+public final class AppSettings {
     // Flash constant
     public static final String FLASH_DANGER = "danger";
     public static final String FLASH_SUCCESS = "success";
     public static final String FLASH_TYPE = "flash-type";
     public static final String FLASH_INFO = "info";
     public static final String FLASH_WARNING = "warning";
-
 
     public static final String FLASH = "flash";
     public static final String PAGE_OK = "Страница успешно проверена";

@@ -8,14 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@UtilityClass  // for Sonar warning
 public final class UrlRepository extends BaseRepository {
     public static final String FIELD_CREATED_AT = "created_at";
 
@@ -24,13 +25,11 @@ public final class UrlRepository extends BaseRepository {
         try (Connection conn = BaseRepository.getDataSource().getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
-            LocalDateTime createdAt = LocalDateTime.now();
-            preparedStatement.setTimestamp(2, Timestamp.valueOf(createdAt));
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(url.getCreatedAt()));
             preparedStatement.executeUpdate();
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 url.setId(generatedKeys.getLong(1));
-                url.setCreatedAt(createdAt);
             } else {
                 throw new SQLException("DB have not returned an id after saving an entity");
             }
@@ -44,10 +43,9 @@ public final class UrlRepository extends BaseRepository {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                String name = resultSet.getString("name");
-                LocalDateTime createAt = resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime();
-                Url url = new Url(name, createAt);
-                url.setCreatedAt(createAt);
+                Url url = new Url(
+                        resultSet.getString("name"),
+                        resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime());
                 url.setId(id);
                 return Optional.of(url);
             }
@@ -62,10 +60,10 @@ public final class UrlRepository extends BaseRepository {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                LocalDateTime createdAt = resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime();
-                Long id = resultSet.getLong("id");
-                Url url = new Url(name, createdAt);
-                url.setId(id);
+                Url url = new Url(
+                        name,
+                        resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime());
+                url.setId(resultSet.getLong("id"));
                 return Optional.of(url);
             }
             return Optional.empty();
@@ -80,11 +78,10 @@ public final class UrlRepository extends BaseRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Url> result = new ArrayList<>();
             while (resultSet.next()) {
-                Long id = resultSet.getLong("id");
-                String name = resultSet.getString("name");
-                LocalDateTime createdAt = resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime();
-                Url url = new Url(name, createdAt);
-                url.setId(id);
+                Url url = new Url(
+                        resultSet.getString("name"),
+                        resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime());
+                url.setId(resultSet.getLong("id"));
                 result.add(url);
             }
             return result;

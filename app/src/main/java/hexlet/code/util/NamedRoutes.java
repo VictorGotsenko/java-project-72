@@ -1,14 +1,12 @@
 package hexlet.code.util;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass  // for Sonar warning
 public final class NamedRoutes {
     static final String PATH_MAIN_PAGE = "/";
     static final String PATH_BUILD_PAGE = "/urls/build";
     static final String PATH_SITES_PAGE = "/urls";
-
-    private NamedRoutes() {
-        //  for SONAR warning
-        throw new IllegalStateException("Utility class");
-    }
 
     public static String mainPage() {
         return PATH_MAIN_PAGE;

@@ -35,15 +35,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.URIBuilder;
 
 @Slf4j
+@UtilityClass  // for Sonar warning
 public final class UrlController {
-    private UrlController() {
-        // Sonar warning
-        // Prevent instantiation
-    }
 
     public static void build(Context ctx) {
         BasePage page = new BasePage();

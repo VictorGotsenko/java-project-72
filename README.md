@@ -15,5 +15,5 @@ make build-run
 
 + Used technologies:
   - Frontend: Bootstrap, JTE
-  - Backend: Java, Javalin, LOMBOK, PostgreSQL, H2database, unirest-java, jsoup
+  - Backend: Java, Javalin, LOMBOK, HikariCP, PostgreSQL, H2database, unirest-java, jsoup
   - Tests: JUnit, MockWebServer
