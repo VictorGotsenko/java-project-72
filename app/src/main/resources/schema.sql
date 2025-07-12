@@ -14,7 +14,7 @@ CREATE TABLE url_checks (
     status_code INT,
     title VARCHAR(100),
     h1 VARCHAR(100),
-    description VARCHAR(255),
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (url_id) REFERENCES urls(id) ON DELETE CASCADE -- foreign key with cascade delete
 );
