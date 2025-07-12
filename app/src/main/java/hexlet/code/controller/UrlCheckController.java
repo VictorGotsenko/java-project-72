@@ -39,6 +39,7 @@ public final class UrlCheckController {
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + urlId + " not found"));
         log.info("Got URL ID: {}", urlId);
         try {
+//            Unirest.config().proxy("127.0.0.1", 1080)
             HttpResponse<String> response = Unirest.get(url.getName()).asString();
             Document document = Jsoup.parse(response.getBody());
 
@@ -53,18 +54,21 @@ public final class UrlCheckController {
             log.info("urlCheck created");
             UrlCheckRepository.save(urlCheck);
             log.info("check saved");
+            ctx.sessionAttribute(FLASH, PAGE_OK);
+            ctx.sessionAttribute(FLASH_TYPE, FLASH_SUCCESS);
         } catch (UnirestException e) {
+            e.printStackTrace();
+            log.info("Error in UrlCheckController.check - UnirestException: ", e);
             ctx.sessionAttribute(FLASH, URL_BAD);
             ctx.sessionAttribute(FLASH_TYPE, FLASH_DANGER);
-            ctx.redirect(NamedRoutes.urlPath(urlId));
-
-        } catch (Exception e) {
+//            ctx.redirect(NamedRoutes.urlPath(urlId))
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.info("Error in UrlCheckController.check - SQLException", e);
             ctx.sessionAttribute(FLASH, CHECK_ERROR + e.getMessage());
             ctx.sessionAttribute(FLASH_TYPE, FLASH_DANGER);
-            ctx.redirect(NamedRoutes.urlPath(urlId));
+//            ctx.redirect(NamedRoutes.urlPath(urlId))
         }
-        ctx.sessionAttribute(FLASH, PAGE_OK);
-        ctx.sessionAttribute(FLASH_TYPE, FLASH_SUCCESS);
         ctx.redirect(NamedRoutes.urlPath(urlId));
     }
 }
