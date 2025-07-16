@@ -121,13 +121,19 @@ class AppTest {
             Response response = client.post(NamedRoutes.urlPathForChecks(savedUrl.getId()));
             assertThat(response.code()).isEqualTo(200);
             List<UrlCheck> urlCheckList = UrlCheckRepository.findById(savedUrl.getId());
-            assertThat(!urlCheckList.isEmpty());
+            assertThat(urlCheckList.contains(savedUrl));
         });
     }
 
     @Test
     void testNoExistEntry() throws SQLException {
         Optional<Url> url = UrlRepository.find(999L);
+        assertThat(url.isEmpty());
+    }
+
+    @Test
+    void testNoExistLink() throws SQLException {
+        Optional<Url> url = UrlRepository.findByName("https://ya.ru");
         assertThat(url.isEmpty());
     }
 }
