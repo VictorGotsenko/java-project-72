@@ -17,9 +17,8 @@ public class Url {
     private LocalDateTime createdAt;
     private List<UrlCheck> urlCheckList;
 
-    public Url(String name, LocalDateTime createdAt) {
+    public Url(String name) {
         this.name = name;
-        this.createdAt = createdAt;
         this.urlCheckList = new ArrayList<>();
     }
 }

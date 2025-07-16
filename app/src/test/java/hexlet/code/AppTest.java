@@ -1,6 +1,8 @@
 package hexlet.code;
 
 import hexlet.code.model.Url;
+import hexlet.code.model.UrlCheck;
+import hexlet.code.repository.UrlCheckRepository;
 import hexlet.code.repository.UrlRepository;
 
 import hexlet.code.util.NamedRoutes;
@@ -20,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -67,7 +70,8 @@ class AppTest {
     //save URL in BD
     @Test
     void testUrlSave() throws SQLException {
-        Url url = new Url("https://mail.ru/", LocalDateTime.now());
+        Url url = new Url("https://mail.ru/");
+        url.setCreatedAt(LocalDateTime.now());
         UrlRepository.save(url);
         JavalinTest.test(app, (server, client) -> {
             Response response = client.get("/urls/" + url.getId());
@@ -108,14 +112,22 @@ class AppTest {
     @Test
     void testCheck() throws SQLException {
         String mockUrl = mockServer.url("/").toString();
-        Url url = new Url(mockUrl, LocalDateTime.now());
+        Url url = new Url(mockUrl);
+        url.setCreatedAt(LocalDateTime.now());
         UrlRepository.save(url);
 
         JavalinTest.test(app, (server, client) -> {
             Url savedUrl = UrlRepository.findByName(mockServer.url("/").toString()).orElseThrow();
             Response response = client.post(NamedRoutes.urlPathForChecks(savedUrl.getId()));
             assertThat(response.code()).isEqualTo(200);
+            List<UrlCheck> urlCheckList = UrlCheckRepository.findById(savedUrl.getId());
+            assertThat(!urlCheckList.isEmpty());
         });
     }
 
+    @Test
+    void testNoExistEntry() throws SQLException {
+        Optional<Url> url = UrlRepository.find(999L);
+        assertThat(url.isEmpty());
+    }
 }

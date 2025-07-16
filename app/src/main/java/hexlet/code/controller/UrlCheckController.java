@@ -48,9 +48,9 @@ public final class UrlCheckController {
             String title = document.title();
             String h1 = document.select("h1").text();
             String description = document.select("meta[name=description]").attr("content");
-            LocalDateTime createdAt = LocalDateTime.now();
 
-            UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, urlId, createdAt);
+            UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, urlId);
+            urlCheck.setCreatedAt(LocalDateTime.now());
             log.info("urlCheck created");
             UrlCheckRepository.save(urlCheck);
             log.info("check saved");

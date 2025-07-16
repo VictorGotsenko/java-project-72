@@ -43,9 +43,8 @@ public final class UrlRepository extends BaseRepository {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Url url = new Url(
-                        resultSet.getString("name"),
-                        resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime());
+                Url url = new Url(resultSet.getString("name"));
+                url.setCreatedAt(resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime());
                 url.setId(id);
                 return Optional.of(url);
             }
@@ -60,9 +59,8 @@ public final class UrlRepository extends BaseRepository {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Url url = new Url(
-                        name,
-                        resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime());
+                Url url = new Url(resultSet.getString("name"));
+                url.setCreatedAt(resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime());
                 url.setId(resultSet.getLong("id"));
                 return Optional.of(url);
             }
@@ -78,9 +76,8 @@ public final class UrlRepository extends BaseRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Url> result = new ArrayList<>();
             while (resultSet.next()) {
-                Url url = new Url(
-                        resultSet.getString("name"),
-                        resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime());
+                Url url = new Url(resultSet.getString("name"));
+                url.setCreatedAt(resultSet.getTimestamp(FIELD_CREATED_AT).toLocalDateTime());
                 url.setId(resultSet.getLong("id"));
                 result.add(url);
             }

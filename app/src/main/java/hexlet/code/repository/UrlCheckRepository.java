@@ -60,8 +60,8 @@ public final class UrlCheckRepository {
                         resultSet.getString("title"),
                         resultSet.getString("h1"),
                         resultSet.getString("description"),
-                        urlId,
-                        resultSet.getTimestamp("created_at").toLocalDateTime());
+                        urlId);
+                urlCheck.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
                 urlCheck.setId(resultSet.getLong("id"));
                 result.add(urlCheck);
             }
@@ -72,7 +72,7 @@ public final class UrlCheckRepository {
         return result;
     }
 
-    public static Map<Long, UrlCheck> getLastestChecks() throws SQLException {
+    public static Map<Long, UrlCheck> getLatestChecks() throws SQLException {
         Map<Long, UrlCheck> result = new HashMap<>();
         String sql = "SELECT DISTINCT ON (url_id) * from url_checks order by url_id DESC, id DESC";
         try (Connection conn = BaseRepository.getDataSource().getConnection();
@@ -84,13 +84,13 @@ public final class UrlCheckRepository {
                         resultSet.getString("title"),
                         resultSet.getString("h1"),
                         resultSet.getString("description"),
-                        resultSet.getLong("url_id"),
-                        resultSet.getTimestamp("created_at").toLocalDateTime());
+                        resultSet.getLong("url_id"));
+                urlCheck.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
                 urlCheck.setId(resultSet.getLong("id"));
                 result.put(resultSet.getLong("url_id"), urlCheck);
             }
         } catch (SQLException e) {
-            log.info("Error in UrlCheckRepository.getLastestChecks ", e);
+            log.info("Error in UrlCheckRepository.getLatestChecks ", e);
             e.printStackTrace();
         }
         return result;

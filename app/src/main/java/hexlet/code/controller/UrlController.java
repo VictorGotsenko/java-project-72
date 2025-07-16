@@ -76,7 +76,8 @@ public final class UrlController {
         URL url = new URIBuilder().setScheme(protocol).setHost(host).setPort(port).build().toURL();
 
         if (UrlRepository.findByName(String.valueOf(url)).isEmpty()) {
-            Url newUrl = new Url(String.valueOf(url), LocalDateTime.now());
+            Url newUrl = new Url(String.valueOf(url));
+            newUrl.setCreatedAt(LocalDateTime.now());
             UrlRepository.save(newUrl);
         } else {
             ctx.sessionAttribute(FLASH, PAGE_EXIST);
@@ -92,7 +93,7 @@ public final class UrlController {
 
     public static void index(Context ctx) throws SQLException {
         List<Url> urls = UrlRepository.getEntities();
-        Map<Long, UrlCheck> latestChecks = UrlCheckRepository.getLastestChecks();
+        Map<Long, UrlCheck> latestChecks = UrlCheckRepository.getLatestChecks();
 
         UrlsPage page = new UrlsPage(urls, latestChecks);
         page.setFlash(ctx.consumeSessionAttribute(FLASH));

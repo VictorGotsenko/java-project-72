@@ -1,4 +1,3 @@
-.PHONY: build
 .DEFAULT_GOAL := build-run
 
 clean:
