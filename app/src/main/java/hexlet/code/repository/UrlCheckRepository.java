@@ -40,7 +40,6 @@ public final class UrlCheckRepository {
                 throw new SQLException("DB have not returned an id after saving an entity");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             log.info("Error in UrlCheckRepository.save ", e);
         }
     }
@@ -67,7 +66,6 @@ public final class UrlCheckRepository {
             }
         } catch (SQLException e) {
             log.info("Error in UrlCheckRepository.findById ", e);
-            e.printStackTrace();
         }
         return result;
     }
@@ -91,7 +89,6 @@ public final class UrlCheckRepository {
             }
         } catch (SQLException e) {
             log.info("Error in UrlCheckRepository.getLatestChecks ", e);
-            e.printStackTrace();
         }
         return result;
     }

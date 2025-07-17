@@ -57,7 +57,6 @@ public final class UrlCheckController {
             ctx.sessionAttribute(FLASH, PAGE_OK);
             ctx.sessionAttribute(FLASH_TYPE, FLASH_SUCCESS);
         } catch (UnirestException e) {
-            e.printStackTrace();
             log.info("Error in UrlCheckController.check - UnirestException: ", e);
             ctx.sessionAttribute(FLASH, URL_BAD);
             ctx.sessionAttribute(FLASH_TYPE, FLASH_DANGER);
