@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -39,7 +40,8 @@ class AppTest {
     @BeforeAll
     static void beforeAll() throws IOException {
         mockServer = new MockWebServer();
-        MockResponse mockedResponse = new MockResponse().setBody(readFixture("test.html"));
+        MockResponse mockedResponse = new MockResponse()
+                .setBody(readFixture("test.html"));
         mockServer.enqueue(mockedResponse);
         mockServer.start();
     }
@@ -55,7 +57,6 @@ class AppTest {
     static void afterAll() throws IOException {
         mockServer.shutdown();
     }
-
 
     //        Main page
     @Test
@@ -122,7 +123,31 @@ class AppTest {
             assertThat(response.code()).isEqualTo(200);
             List<UrlCheck> urlCheckList = UrlCheckRepository.findById(savedUrl.getId());
             assertThat(urlCheckList.contains(savedUrl));
+            for (UrlCheck urlCheck : urlCheckList) {
+                assertThat(urlCheck.getH1().equals("Just do it!"));
+                assertThat(urlCheck.getTitle().equals("Test page"));
+                assertThat(urlCheck.getDescription().equals("just a simple test page"));
+            }
+            Map<Long, UrlCheck> latestChecks = UrlCheckRepository.getLatestChecks();
+            assertThat(!latestChecks.isEmpty());
         });
+    }
+
+
+    // everything below is for coverage test SonarQube
+
+
+    @Test
+    void testGetEntities() throws SQLException {
+        Url url = new Url("https://mail.ru/");
+        url.setCreatedAt(LocalDateTime.now());
+        UrlRepository.save(url);
+        url = new Url("https://ya.ru/");
+        url.setCreatedAt(LocalDateTime.now());
+        UrlRepository.save(url);
+
+        List<Url> getEntities = UrlRepository.getEntities();
+        assertThat(!getEntities.isEmpty());
     }
 
     @Test
