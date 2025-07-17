@@ -36,6 +36,8 @@ val unirestVer = "3.14.5"
 val jacksonVer = "2.19.1"
 val h2databaseVer = "2.3.232"
 val HikariCPVer = "6.3.0"
+val assertjVer = "4.0.0-M1"
+
 val mockwebserverVer = "4.12.0"
 
 dependencies {
@@ -61,7 +63,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVer")
     testImplementation(platform("org.junit:junit-bom:$junitVer"))
     testImplementation("io.javalin:javalin-testtools:$javalinVer")
-    testImplementation("org.assertj:assertj-core:4.0.0-M1")
+    testImplementation("org.assertj:assertj-core:$assertjVer")
     testImplementation("com.squareup.okhttp3:mockwebserver:$mockwebserverVer") // MockWebServer » 5.1.0
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVer")
