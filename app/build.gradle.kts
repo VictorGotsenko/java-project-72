@@ -28,20 +28,29 @@ val junitVer = "6.0.0-M1"
 val javalinVer = "6.7.0"
 val lombokVer = "1.18.38"
 val checkstyleVer = "10.26.1"
+val jteVer = "3.2.1"
+val slf4jVer = "2.1.0-alpha1"
+val jsoupVer = "1.21.1"
+val postgresqlVer = "42.7.7"
+val unirestVer = "3.14.5"
+val jacksonVer = "2.19.1"
+val h2databaseVer = "2.3.232"
+val HikariCPVer = "6.3.0"
+val mockwebserverVer = "4.12.0"
 
 dependencies {
     // Javalin
     implementation("io.javalin:javalin:$javalinVer")
     implementation("io.javalin:javalin-rendering:$javalinVer")
-    implementation("gg.jte:jte:3.2.1")
-    implementation("org.slf4j:slf4j-simple:2.1.0-alpha1")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.19.1")
-    implementation("com.puppycrawl.tools:checkstyle:$checkstyleVer") // CheckStyle
-    implementation("org.postgresql:postgresql:42.7.7") // Special for PostgreSQL
-    implementation("com.h2database:h2:2.3.232") // database H2 & HikariCP
-    implementation("com.zaxxer:HikariCP:6.3.0")
-    implementation("com.konghq:unirest-java:3.14.5") // Unirest Java
-    implementation("org.jsoup:jsoup:1.21.1") // jsoup HTML parser library @ https://jsoup.org/
+    implementation("gg.jte:jte:$jteVer")
+    implementation("org.slf4j:slf4j-simple:$slf4jVer")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVer")
+    implementation("com.puppycrawl.tools:checkstyle:$checkstyleVer") /* CheckStyle */
+    implementation("org.postgresql:postgresql:$postgresqlVer") // Special for PostgreSQL
+    implementation("com.h2database:h2:$h2databaseVer") // database H2 & HikariCP
+    implementation("com.zaxxer:HikariCP:$HikariCPVer")
+    implementation("com.konghq:unirest-java:$unirestVer") // Unirest Java
+    implementation("org.jsoup:jsoup:$jsoupVer") // jsoup HTML parser library @ https://jsoup.org/
 
     // LOMBOK
     compileOnly("org.projectlombok:lombok:$lombokVer")
@@ -51,13 +60,11 @@ dependencies {
     // Tests
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVer")
     testImplementation(platform("org.junit:junit-bom:$junitVer"))
-    testImplementation("io.javalin:javalin-testtools:6.7.0")
+    testImplementation("io.javalin:javalin-testtools:$javalinVer")
     testImplementation("org.assertj:assertj-core:4.0.0-M1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVer")
+    testImplementation("com.squareup.okhttp3:mockwebserver:$mockwebserverVer") // MockWebServer » 5.1.0
 
-    // MockWebServer » 5.1.0
-//    testImplementation("com.squareup.okhttp3:mockwebserver:5.1.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVer")
 }
 
 checkstyle {
