@@ -63,7 +63,6 @@ public final class UrlCheckController {
             ctx.sessionAttribute(FLASH_TYPE, FLASH_DANGER);
 //            ctx.redirect(NamedRoutes.urlPath(urlId))
         } catch (SQLException e) {
-            e.printStackTrace();
             log.info("Error in UrlCheckController.check - SQLException", e);
             ctx.sessionAttribute(FLASH, CHECK_ERROR + e.getMessage());
             ctx.sessionAttribute(FLASH_TYPE, FLASH_DANGER);
