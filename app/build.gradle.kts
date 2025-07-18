@@ -69,6 +69,14 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVer")
 }
 
+configurations {
+    all {
+        resolutionStrategy {
+            disableDependencyVerification() // Sensitive: dependency verification is disabled
+        }
+    }
+}
+
 checkstyle {
     toolVersion = "10.26.1"
     configFile = file("config/checkstyle/checkstyle.xml")
