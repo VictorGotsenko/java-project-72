@@ -19,7 +19,6 @@ import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
@@ -50,7 +49,6 @@ public final class UrlCheckController {
             String description = document.select("meta[name=description]").attr("content");
 
             UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, urlId);
-            urlCheck.setCreatedAt(LocalDateTime.now());
             log.info("urlCheck created");
             UrlCheckRepository.save(urlCheck);
             log.info("check saved");
@@ -60,12 +58,10 @@ public final class UrlCheckController {
             log.info("Error in UrlCheckController.check - UnirestException: ", e);
             ctx.sessionAttribute(FLASH, URL_BAD);
             ctx.sessionAttribute(FLASH_TYPE, FLASH_DANGER);
-//            ctx.redirect(NamedRoutes.urlPath(urlId))
         } catch (SQLException e) {
             log.info("Error in UrlCheckController.check - SQLException", e);
             ctx.sessionAttribute(FLASH, CHECK_ERROR + e.getMessage());
             ctx.sessionAttribute(FLASH_TYPE, FLASH_DANGER);
-//            ctx.redirect(NamedRoutes.urlPath(urlId))
         }
         ctx.redirect(NamedRoutes.urlPath(urlId));
     }

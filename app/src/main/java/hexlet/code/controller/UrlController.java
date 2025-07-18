@@ -31,7 +31,6 @@ import java.net.URISyntaxException;
 import java.net.MalformedURLException;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -77,15 +76,14 @@ public final class UrlController {
 
         if (UrlRepository.findByName(String.valueOf(url)).isEmpty()) {
             Url newUrl = new Url(String.valueOf(url));
-            newUrl.setCreatedAt(LocalDateTime.now());
             UrlRepository.save(newUrl);
+            log.info("newUrl saveed");
         } else {
             ctx.sessionAttribute(FLASH, PAGE_EXIST);
             ctx.sessionAttribute(FLASH_TYPE, FLASH_INFO);
             ctx.redirect(NamedRoutes.urlsPath());
             return;
         }
-
         ctx.sessionAttribute(FLASH, PAGE_ADDED);
         ctx.sessionAttribute(FLASH_TYPE, FLASH_SUCCESS);
         ctx.redirect(NamedRoutes.urlsPath());
